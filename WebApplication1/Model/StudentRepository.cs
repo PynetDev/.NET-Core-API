@@ -15,9 +15,9 @@ namespace WebApplication1.Model
                 },
                 new Student
                 {
-                    id = 1,
-                    name = "doe",
-                    email = "doe@gmail.com",
+                    id = 2,
+                    name = "smith",
+                    email = "smith@gmail.com",
                     address = "Texas, USA"
                 }
             };
