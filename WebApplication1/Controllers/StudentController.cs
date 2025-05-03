@@ -116,12 +116,14 @@ namespace WebApplication1.Controllers
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public ActionResult AddStudentDetails([FromBody]List<StudentDTO> studentslst) {
+        public ActionResult AddStudentDetails([FromBody] List<StudentDTO> studentslst)
+        {
             //if (!ModelState.IsValid)
             //    return BadRequest(ModelState);   // this code is only required when we remove [ApiController] attribute it will do manual validation on properties of an entity class
+            
             try
             {
-                if(studentslst.Count == 0 || studentslst == null)
+                if (studentslst.Count == 0 || studentslst == null)
                     return BadRequest("Invalid Request");
                 int newId = StudentRepository.Students.LastOrDefault()?.id + 1 ?? 1;
 
@@ -134,13 +136,15 @@ namespace WebApplication1.Controllers
                 }).ToList();
 
                 StudentRepository.Students.AddRange(studentsToAdd);
-                return CreatedAtRoute("GetStudentDetails",true);
+                return CreatedAtRoute("GetStudentDetails", true);
             }
             catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error");
             }
-             
+
         }
+
+
     }
 }
