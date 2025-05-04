@@ -11,14 +11,16 @@ namespace WebApplication1.Model
                     id = 1,
                     name = "John",
                     email = "john@gmail.com",
-                    address = "Miami, USA"
+                    address = "Miami, USA",
+                    password="john@123"
                 },
                 new Student
                 {
                     id = 2,
                     name = "smith",
                     email = "smith@gmail.com",
-                    address = "Texas, USA"
+                    address = "Texas, USA",
+                    password="smith@123"
                 }
             };
     }

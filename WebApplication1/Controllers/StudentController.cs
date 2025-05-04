@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.CodeAnalysis;
+using WebApplication1.Logging;
 using WebApplication1.Model;
 
 namespace WebApplication1.Controllers
@@ -10,17 +12,25 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+        //private readonly IMyLogger _logger;
+        private readonly ILogger<StudentController> _ilogger;
+        public StudentController(ILogger<StudentController> ilogger)
+        {
+                _ilogger = ilogger;
+        }
         [HttpGet]
         [Route("All",Name = "GetStudentDetails")]
         public ActionResult GetStudentDetails()
         {
+            _ilogger.LogInformation("GetStudentDetails method starts");
             //200 - Success
             var students = StudentRepository.Students.Select(i=>new StudentDTO
             {
                 id =i.id,
                 name =i.name,
                 email=i.email,
-                address= i.address
+                address= i.address,
+                Password=i.password,
         
             });
             return Ok(students);
@@ -33,13 +43,22 @@ namespace WebApplication1.Controllers
         [ProducesResponseType(500)]
         public ActionResult GetStudentDetailsById(int id)
         {
+            _ilogger.LogInformation("GetStudentDetailsById method starts");
             if (id <= 0)
+            {
+                _ilogger.LogWarning("GetStudentDetailsById - Bad Request");
                 return BadRequest("Invalid Input Id");
+            }
+               
             try
             {
                 var result = StudentRepository.Students.FirstOrDefault(i => i.id == id);
                 if (result == null)
+                {
+                    _ilogger.LogError("GetStudentDetailsById - Student details not found");
                     return NotFound($"The student with id:{id} not found");
+                }
+                    
                 StudentDTO student = new StudentDTO {
                     address = result.address,
                     name = result.name,
@@ -145,6 +164,60 @@ namespace WebApplication1.Controllers
 
         }
 
+        [HttpPut]
+        [Route("Update")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult UpdateStudent([FromBody] StudentDTO student)
+        {
+            if (student == null || student.id <= 0)
+                return BadRequest();
+            var stdobj=StudentRepository.Students.FirstOrDefault(i => i.id == student.id);
+            if (stdobj == null)
+                return NotFound();
+            stdobj.email = student.email;
+            stdobj.address = student.address;
+            stdobj.name = student.name;
+            return NoContent(); // will give no content but successfully update student details 
+        }
 
+        [HttpPatch]
+        [Route("{id:int}/UpdatePassword")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult UpdatePassword(int id, [FromBody] JsonPatchDocument<StudentDTO> patchDocument)
+        {
+            if(patchDocument == null || id<0)
+                return BadRequest();
+            var stdobj = StudentRepository.Students.FirstOrDefault(i => i.id == id);
+            if (stdobj == null)
+                return NotFound();
+            var studentDTO = new StudentDTO
+            {
+                Password=stdobj.password,
+            };
+            patchDocument.ApplyTo(studentDTO,ModelState);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            stdobj.password = studentDTO.Password;
+            return Ok();
+
+        }
+
+        //Dependency Injection Example
+        [HttpGet]
+        public ActionResult DIExample()
+        {
+            _ilogger.LogTrace("LogTrace");
+            _ilogger.LogDebug("LogDebug");
+            _ilogger.LogInformation("LogInformation");
+            _ilogger.LogWarning("LogWarning");
+            _ilogger.LogError("LogError");
+            _ilogger.LogCritical("LogCritical");
+            return Ok();
+        }
     }
 }
