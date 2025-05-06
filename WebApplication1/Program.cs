@@ -1,9 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
+using WebApplication1.Data;
 using WebApplication1.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Serilog Configuration
+# region Serilog Configuration
 //Log.Logger = new LoggerConfiguration()
 //    .MinimumLevel.Information()  // Starts logging from information level                        
 //    .WriteTo.File("Log/log.txt", rollingInterval:RollingInterval.Day) // File Provider - logging into files
@@ -12,7 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 //    .CreateLogger();
 
 //builder.Host.UseSerilog(); // Only serilog will work
-//builder.Logging.AddSerilog(); // In Built and serilog both will work 
+//builder.Logging.AddSerilog(); // In Built and serilog both will work
+#endregion
 
 // Add services to the container.
 
@@ -40,6 +43,11 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddScoped<IMyLogger, LogToServerMemory>();
 //builder.Services.AddTransient<IMyLogger, LogToServerMemory>();
 //builder.Services.AddSingleton<IMyLogger, LogToServerMemory>();
+
+#region 
+builder.Services.AddDbContext<CollegeDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CollegeDBConnectionString")));
+#endregion
 
 var app = builder.Build();
 

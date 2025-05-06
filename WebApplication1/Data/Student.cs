@@ -1,4 +1,8 @@
-﻿namespace WebApplication1.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
+
+namespace WebApplication1.Data
 {
     public class Student
     {
@@ -8,5 +12,7 @@
         public string address { get; set; }
         public string password { get; set; }
         public DateOnly dateOfBirth { get; set; }
+
+
     }
 }

@@ -12,7 +12,7 @@ namespace WebApplication1.Model
                     name = "John",
                     email = "john@gmail.com",
                     address = "Miami, USA",
-                    password="john@123"
+                    password="john@123",
                 },
                 new Student
                 {
@@ -20,7 +20,7 @@ namespace WebApplication1.Model
                     name = "smith",
                     email = "smith@gmail.com",
                     address = "Texas, USA",
-                    password="smith@123"
+                    password="smith@123",
                 }
             };
     }
