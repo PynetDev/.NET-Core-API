@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ namespace WebApplication1.Controllers
             _mapper = mapper;
             _cache = cache;
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("All", Name = "GetStudentDetails")]
         public async Task<ActionResult> GetStudentDetailsAsync()
@@ -44,6 +46,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin,User")]
         [Route("{id}", Name = "GetStudentDetailsById")]
         [ProducesResponseType(400)] //Documenting status codes so that front end code can able to capture this responses more efficiently
         [ProducesResponseType(404)]
