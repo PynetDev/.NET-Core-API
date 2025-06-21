@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Reflection;
+using WebApplication1.AutoMapperConfigurations;
 using WebApplication1.Data;
+using WebApplication1.ExceptionHandler;
 using WebApplication1.Logging;
+using WebApplication1.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +54,19 @@ builder.Services.AddDbContext<CollegeDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CollegeDBConnectionString")));
 #endregion
 
+//Mapper Service Register
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
+
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+
+//In Memory Caching
+builder.Services.AddMemoryCache();
+
+
 var app = builder.Build();
+
+//Global Exception Handling Registartion
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

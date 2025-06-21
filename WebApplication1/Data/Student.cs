@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
+using WebApplication1.CustomValidators;
 
 namespace WebApplication1.Data
 {
@@ -13,6 +14,8 @@ namespace WebApplication1.Data
         public string password { get; set; }
         public DateOnly dateOfBirth { get; set; }
 
+        [AdmissionDate] //Custom attribute from custom validators folder
+        public DateTime AdmissionDate { get; set; }
 
     }
 }

@@ -32,5 +32,8 @@ namespace WebApplication1.Model
 
         [AdmissionDate] //Custom attribute from custom validators folder
         public DateTime AdmissionDate { get; set; }
+
+        [Required]
+        public DateOnly dateOfBirth { get; set; }
     }
 }
